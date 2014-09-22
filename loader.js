@@ -11,11 +11,11 @@
 	}
 
 	function wrapper(url, code) {
-		return "define('" + url + "', function(exports){" + code + "});";
+		return "define('" + url + "', function(){" + code + "});";
 	}
 
 	var define = window.define = function (url, factory) {
-		var res = factory(exports);
+		var res = factory();
 		if (res) modules[url] = res;
 		else modules[url] = "loaded";
 	};
