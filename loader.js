@@ -1,6 +1,5 @@
-(function() {
-
-	var modules = window.m = {};
+(function(w) {
+	var modules = {};
 
 	function httpQuery(url) {
 		url += ".js";
@@ -11,13 +10,14 @@
 	}
 
 	function wrapper(url, code) {
-		return "define('" + url + "', function(){" + code + "});";
+		return "define('" + url + "', function(require, exports, module){" + code + "});";
 	}
 
-	var define = window.define = function (url, factory) {
-		var res = factory();
-		if (res) modules[url] = res;
-		else modules[url] = "loaded";
+	w.define = function(url, factory) {
+		var module = {},
+			exports = module.exports = {};
+		factory.call(window, require, exports, module);
+		modules[url] = module.exports;
 	};
 
 	function fixUrl(url) {
@@ -35,21 +35,14 @@
 		head.removeChild(c);
 	}
 
-	var require = window.require = function(url) {
+	function require(url) {
 		url = fixUrl(url);
-		if (modules[url]) {
-			if (modules[url] === "loaded")
-				return undefined;
-			return modules[url];
-		}
-		var code = httpQuery(url);
-		code = wrapper(url, code);
-		exec(code);
-		if (modules[url]) {
-			if (modules[url] === "loaded")
-				return undefined;
-			return modules[url];
-		}
-	};
+		if (!modules[url])
+			exec(wrapper(url, httpQuery(url)));
+		return modules[url];
+	}
 
-})();
+	w.bootstrap = function(url) {
+		require(fixUrl(url));
+	};
+})(window);
