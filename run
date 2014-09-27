@@ -1,7 +1,10 @@
 #!/bin/bash
 
+tar -zxvf ./bin/$(uname)/fibjs.tar.gz ./bin/$(uname)/fibjs
+
 nohup ./bin/$(uname)/fibjs server.js >/dev/null 2>&1 &
 
 ./node_modules/.bin/mocha-phantomjs -R spec http://127.0.0.1:8080/test/index.html
 
 killall fibjs
+rm ./bin/$(uname)/fibjs
