@@ -4,6 +4,6 @@ if [[ $1 = 'dev' ]]; then
     ./node_modules/.bin/static -H '{"Cache-Control": "no-cache, must-revalidate"}'
 else
     nohup ./node_modules/.bin/static -H '{"Cache-Control": "no-cache, must-revalidate"}' >/dev/null 2>&1 &
-    ./node_modules/.bin/mocha-phantomjs -R spec http://127.0.0.1:8080/index.html
+    ./node_modules/.bin/mocha-phantomjs -R spec http://127.0.0.1:8080/test/index.html
     killall node
 fi
