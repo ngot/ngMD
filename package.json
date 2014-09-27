@@ -1,0 +1,26 @@
+{
+  "name": "ngMD",
+  "version": "0.0.1",
+  "description": "",
+  "main": "loader.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "mocha-phantomjs": "^3.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "sh run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ngot/ngMD.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngot/ngMD/issues"
+  },
+  "homepage": "https://github.com/ngot/ngMD"
+}
