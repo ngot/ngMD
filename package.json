@@ -12,7 +12,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "sh run"
+    "test": "sh run",
+    "start": "sh run dev"
   },
   "repository": {
     "type": "git",
