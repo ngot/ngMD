@@ -1,0 +1,2 @@
+window.bootstraped = true;
+
