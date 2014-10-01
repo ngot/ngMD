@@ -8,7 +8,16 @@
     var util = require("util");
 ```
 
+####环境依赖
+- Node.js
+
+
 ####测试
+#####测试前需要安装依赖
+```
+    npm install
+```
+#####运行测试
 ```
     npm test
 ```
