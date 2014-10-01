@@ -1,9 +1,28 @@
 (function(w) {
 	var modules = {};
 
-	function getXHR() {
-		return new XMLHttpRequest();
-	}
+	var msXmlhttp = ["Msxml2.XMLHTTP.5.0", "Msxml2.XMLHTTP.4.0", "Msxml2.XMLHTTP.3.0", "Msxml2.XMLHTTP", "Microsoft.XMLHTTP"];
+	var j;
+	var getXHR = (function() {
+		if ('XMLHttpRequest' in w) {
+			return function() {
+				return new XMLHttpRequest();
+			};
+		} else if ('ActiveXObject' in w) {
+			for (var i = 0; i < msXmlhttp.length; i++) {
+				try {
+					new ActiveXObject(msXmlhttp[i]);
+					j = i;
+					return function() {
+						return new ActiveXObject(msXmlhttp[j]);
+					};
+				} catch (e) {
+				}
+			}
+		} else {
+			throw "Your browser does not support Ajax!";
+		}
+	})();
 
 	function httpQuery(url) {
 		var xhr = getXHR();

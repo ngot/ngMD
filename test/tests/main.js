@@ -20,7 +20,11 @@ describe("Tests", function() {
 			assert.equal(window.a, 2);
 			require("tests/require/m6");
 			assert.equal(window.a, 2);
-			delete window.a;
+			try{
+				delete window.a;
+			}catch (e){
+				window.a = null;
+			}
 		});
 
 		it("requiredir", function() {
