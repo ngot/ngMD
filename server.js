@@ -8,7 +8,8 @@ require('http').createServer(function(request, response) {
 	request.addListener('end', function() {
 		fileServer.serve(request, response, function(e, res) {
 			if (e && (e.status === 404)) {
-				fileServer.serveFile('/404.json', 200, {}, request, response);
+				console.error("Error serving " + request.url + " - " + e.message);
+				response.end("404");
 			}
 		});
 	}).resume();
