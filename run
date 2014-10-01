@@ -1,9 +1,11 @@
 #!/bin/bash
 
+cmd="node server.js"
+
 if [[ $1 = 'dev' ]]; then
-    ./node_modules/.bin/static -H '{"Cache-Control": "no-cache, must-revalidate"}'
+    ${cmd}
 else
-    nohup ./node_modules/.bin/static -H '{"Cache-Control": "no-cache, must-revalidate"}' >/dev/null 2>&1 &
+    nohup ${cmd} >/dev/null 2>&1 &
     ./node_modules/.bin/mocha-phantomjs -R spec http://127.0.0.1:8080/test/index.html
     killall node
 fi
