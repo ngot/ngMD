@@ -1,12 +1,17 @@
 (function(w) {
 	var modules = {};
 
+	function getXHR() {
+		return new XMLHttpRequest();
+	}
+
 	function httpQuery(url) {
-		url += ".js";
-		var xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.open("GET", url, false);
-		xmlHttpRequest.send();
-		return xmlHttpRequest.responseText;
+		var xhr = getXHR();
+		xhr.open("get", url, false);
+		xhr.send();
+		if (+xhr.responseText === 404)
+			return false;
+		return xhr.responseText;
 	}
 
 	function wrapper(url, code) {
@@ -35,10 +40,77 @@
 		head.removeChild(c);
 	}
 
+	function _require(url) {
+		var r;
+		if (url.slice(-3) === ".js") {
+			r = httpQuery(url);
+			if (r)
+				return r;
+			else
+				throw "module:" + url + " - not found!";
+		}
+
+		r = httpQuery(url + "/package.json");
+		if (r) {
+			r = JSON.parse(r).main;
+			if (r) {
+				var u = url + "/" + r;
+				if (u.slice(-3) === ".js") {
+					r = httpQuery(u);
+					if (r)
+						return r;
+					else
+						throw "module:" + u + " - not found!";
+				} else {
+					u += ".js";
+					r = httpQuery(u);
+					if (r)
+						return r;
+					else {
+						r = httpQuery(url + "/index.js");
+						if (r)
+							return r;
+						else {
+							r = httpQuery(url + ".js");
+							if (r)
+								return r;
+							else
+								throw "module:" + url + " - not found!";
+						}
+					}
+				}
+			} else {
+				r = httpQuery(url + "/index.js");
+				if (r)
+					return r;
+				else {
+					r = httpQuery(url + ".js");
+					if (r)
+						return r;
+					else
+						throw "module:" + url + " - not found!";
+				}
+			}
+		} else {
+			r = httpQuery(url + "/index.js");
+			if (r)
+				return r;
+			else {
+				r = httpQuery(url + ".js");
+				if (r)
+					return r;
+				else
+					throw "module:" + url + " - not found!";
+			}
+		}
+
+	}
+
 	function require(url) {
-		url = fixUrl(url);
-		if (!modules[url])
-			exec(wrapper(url, httpQuery(url)));
+		if (!url) return url;
+		if (!modules[url]) {
+			exec(wrapper(url, _require(url)));
+		}
 		return modules[url];
 	}
 
