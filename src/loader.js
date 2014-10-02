@@ -63,16 +63,8 @@
 		head.removeChild(c);
 	}
 
-	function _require(url) {
-		var r;
-		if (url.slice(-3) === ".js" || url.slice(-5) === ".json") {
-			r = httpQuery(url);
-			if (r)
-				return r;
-			throw "module:" + url + " - not found!";
-		}
-
-		r = httpQuery(url + "/package.json");
+	function _requiredir(url) {
+		var r = httpQuery(url + "/package.json");
 		if (r) {
 			var main;
 			try {
@@ -82,22 +74,38 @@
 
 			if (main) {
 				var u = url + "/" + main;
-				if (u.slice(-3) === ".js") {
-					r = httpQuery(u);
-					if (r)
-						return r;
-				} else {
+				if (u.slice(-3) !== ".js")
 					u += ".js";
-					r = httpQuery(u);
-					if (r)
-						return r;
-				}
+				r = httpQuery(u);
+				if (r)
+					return r;
 			}
 		}
-
 		r = httpQuery(url + "/index.js");
 		if (r)
 			return r;
+	}
+
+	function _require(url) {
+		var r;
+		if (url.slice(-3) === ".js" || url.slice(-5) === ".json") {
+			r = httpQuery(url);
+			if (r)
+				return r;
+			throw "module:" + url + " - not found!";
+		}
+
+		if (url.slice(-1) === '/') {
+			r = _requiredir(url.slice(0, -1));
+			if (r)
+				return r;
+			else
+				throw "module:" + url + "/ - not found!";
+		} else {
+			r = _requiredir(url);
+			if (r)
+				return r;
+		}
 
 		r = httpQuery(url + ".js");
 		if (r)
@@ -109,9 +117,9 @@
 	function require(url) {
 		if (!url) return url;
 		if (!modules[url]) {
-			if(url.slice(-5) === '.json'){
+			if (url.slice(-5) === '.json') {
 				exec(wrapperJSON(url, _require(url)));
-			}else
+			} else
 				exec(wrapperJS(url, _require(url)));
 		}
 		return modules[url];

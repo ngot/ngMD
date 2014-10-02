@@ -32,21 +32,31 @@ describe("Tests", function() {
 			assert.equal(window.a, 2);
 			require("tests/require/m6");
 			assert.equal(window.a, 2);
-			try{
+			try {
 				delete window.a;
-			}catch (e){
+			} catch (e) {
 				window.a = null;
 			}
 		});
 
 		it("requiredir", function() {
 			assert.equal(require("tests/requiredir/t1").a, "a");
+			assert.equal(require("tests/requiredir/t1/").a, "a");
+
 			assert.equal(require("tests/requiredir/t2").a, "a");
+			assert.equal(require("tests/requiredir/t2/").a, "a");
+
 			assert.equal(require("tests/requiredir/t3").a, "a");
+			assert.equal(require("tests/requiredir/t3/").a, "a");
+
 			assert.throws(function() {
 				require("tests/requiredir/t4")
 			});
+			assert.throws(function() {
+				require("tests/requiredir/t4/")
+			});
 			assert.equal(require("tests/requiredir/t5").a, "a");
+			assert.equal(require("tests/requiredir/t5/").a, "a");
 		});
 
 	});
