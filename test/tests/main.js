@@ -5,8 +5,20 @@ describe("Tests", function() {
 		it("exports", function() {
 			assert.equal(require("tests/require/m1").a, "a");
 			assert.equal(require("tests/require/m5.js").a, "a");
+			assert.equal(require("tests/require/j1.json").main, "app");
 
-			assert.throws(require("tests/require/m4"));
+			assert.throws(function() {
+				require("tests/require/m4")();
+			});
+			assert.throws(function() {
+				require("tests/require/x1");
+			});
+			assert.throws(function() {
+				require("tests/require/x1.js");
+			});
+			assert.throws(function() {
+				require("tests/require/x1.json");
+			});
 		});
 
 		it("module.exports", function() {

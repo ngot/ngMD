@@ -33,8 +33,12 @@
 		return xhr.responseText;
 	}
 
-	function wrapper(url, code) {
-		return "define('" + url + "', function(require, exports, module){" + code + "});";
+	function wrapperJS(url, js) {
+		return "define('" + url + "', function(require, exports, module){" + js + "});";
+	}
+
+	function wrapperJSON(url, json) {
+		return "define('" + url + "', function(require, exports, module) {module.exports = JSON.parse(JSON.stringify(" + json + "));});";
 	}
 
 	w.define = function(url, factory) {
@@ -61,10 +65,11 @@
 
 	function _require(url) {
 		var r;
-		if (url.slice(-3) === ".js") {
+		if (url.slice(-3) === ".js" || url.slice(-5) === ".json") {
 			r = httpQuery(url);
 			if (r)
 				return r;
+			throw "module:" + url + " - not found!";
 		}
 
 		r = httpQuery(url + "/package.json");
@@ -104,7 +109,10 @@
 	function require(url) {
 		if (!url) return url;
 		if (!modules[url]) {
-			exec(wrapper(url, _require(url)));
+			if(url.slice(-5) === '.json'){
+				exec(wrapperJSON(url, _require(url)));
+			}else
+				exec(wrapperJS(url, _require(url)));
 		}
 		return modules[url];
 	}
