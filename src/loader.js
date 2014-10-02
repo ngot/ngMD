@@ -48,12 +48,6 @@
 		modules[url] = module.exports;
 	};
 
-	function fixUrl(url) {
-		if (!url) return url;
-		if (url.slice(-3) === ".js") return url.slice(0, -3);
-		return url;
-	}
-
 	function exec(code) {
 		var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
 		var c = document.createElement("script");
@@ -126,6 +120,6 @@
 	}
 
 	w.bootstrap = function(url) {
-		require(fixUrl(url));
+		require(url);
 	};
 })(window);
