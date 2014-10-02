@@ -9,3 +9,6 @@ else
     ./node_modules/.bin/mocha-phantomjs -R spec http://127.0.0.1:8080/test/index.html
     killall node
 fi
+
+cd tools
+npm test
