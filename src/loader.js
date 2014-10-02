@@ -65,64 +65,40 @@
 			r = httpQuery(url);
 			if (r)
 				return r;
-			else
-				throw "module:" + url + " - not found!";
 		}
 
 		r = httpQuery(url + "/package.json");
 		if (r) {
-			r = JSON.parse(r).main;
-			if (r) {
-				var u = url + "/" + r;
+			var main;
+			try {
+				main = JSON.parse(r).main;
+			} catch (e) {
+			}
+
+			if (main) {
+				var u = url + "/" + main;
 				if (u.slice(-3) === ".js") {
 					r = httpQuery(u);
 					if (r)
 						return r;
-					else
-						throw "module:" + u + " - not found!";
 				} else {
 					u += ".js";
 					r = httpQuery(u);
 					if (r)
 						return r;
-					else {
-						r = httpQuery(url + "/index.js");
-						if (r)
-							return r;
-						else {
-							r = httpQuery(url + ".js");
-							if (r)
-								return r;
-							else
-								throw "module:" + url + " - not found!";
-						}
-					}
 				}
-			} else {
-				r = httpQuery(url + "/index.js");
-				if (r)
-					return r;
-				else {
-					r = httpQuery(url + ".js");
-					if (r)
-						return r;
-					else
-						throw "module:" + url + " - not found!";
-				}
-			}
-		} else {
-			r = httpQuery(url + "/index.js");
-			if (r)
-				return r;
-			else {
-				r = httpQuery(url + ".js");
-				if (r)
-					return r;
-				else
-					throw "module:" + url + " - not found!";
 			}
 		}
 
+		r = httpQuery(url + "/index.js");
+		if (r)
+			return r;
+
+		r = httpQuery(url + ".js");
+		if (r)
+			return r;
+
+		throw "module:" + url + " - not found!";
 	}
 
 	function require(url) {
