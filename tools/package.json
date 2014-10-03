@@ -5,7 +5,8 @@
   "main": "build.js",
   "bin": "build.js",
   "dependencies": {
-    "mocha": "~1.21.4"
+    "mocha": "~1.21.4",
+    "uglify-js": "~2.4.15"
   },
   "devDependencies": {},
   "scripts": {
