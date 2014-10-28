@@ -1,0 +1,1 @@
+var t1 = require("test/t1/t1.js");
