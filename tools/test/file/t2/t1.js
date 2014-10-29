@@ -1,0 +1,1 @@
+exports.a = require ("test/file/t2/t2.js");

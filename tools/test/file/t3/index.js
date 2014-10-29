@@ -1,0 +1,1 @@
+var t1 = require( "test/file/t3/t1.json");
